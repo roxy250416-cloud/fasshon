@@ -260,32 +260,15 @@
     <header>
       <h1>ファッション提案システム</h1>
       <p>
-        天気・気温・体格・顔や髪の特徴・好みに関する質問に答えると、<br />
-        条件分岐とスコア計算によりおすすめの服装を1種類提示します。
+        体格・顔や髪の特徴・好みに関する質問に答えると、<br />
+        条件分岐とスコア計算によりおすすめの服装を提示します。
       </p>
     </header>
 
     <main>
       <form id="fashionForm">
         <section class="section">
-          <h2>1. 天気・気温</h2>
-
-          <div class="question">
-            <label for="weather">今日の天気</label>
-            <select id="weather" required>
-              <option value="">選択してください</option>
-              <option value="sunny">晴れ</option>
-              <option value="cloudy">くもり</option>
-              <option value="rainy">雨</option>
-              <option value="snowy">雪</option>
-            </select>
-          </div>
-
-          <div class="question">
-            <label for="temperature">今日の気温</label>
-            <input id="temperature" type="number" placeholder="例：22" required />
-            <p class="note">数字だけ入力してください。例：22</p>
-          </div>
+          <h2>1. 目的・体格・外見の特徴</h2>
 
           <div class="question">
             <label for="scene">行く場所・目的</label>
@@ -295,15 +278,8 @@
               <option value="shopping">買い物</option>
               <option value="date">デート</option>
               <option value="friend">友達と遊ぶ</option>
-              <option value="formal">少しきれいめな場所</option>
+              <option value="formal">きれいめな場所</option>
             </select>
-          </div>
-        </section>
-
-        <section class="section">
-          <h2>2. 体格・外見の特徴</h2>
-
-          <div class="question">
             <label for="gender">性別</label>
             <select id="gender" required>
               <option value="">選択してください</option>
@@ -545,7 +521,6 @@
       event.preventDefault();
       hideError();
 
-      const weather = document.getElementById("weather").value;
       const temperature = Number(document.getElementById("temperature").value);
       const scene = document.getElementById("scene").value;
       const height = document.getElementById("height").value;
@@ -564,7 +539,7 @@
       const accessory = getRadioValue("accessory");
 
       if (
-        !weather || !scene || !gender || !height || !bodyType || !skinTone || !hairColor || !hairType ||
+        !scene || !gender || !height || !bodyType || !skinTone || !hairColor || !hairType ||
         !faceDepth || !eyeBrow || !simple || !street || !clean || !monotone || !accessory ||
         Number.isNaN(temperature)
       ) {
@@ -572,16 +547,6 @@
         return;
       }
 
-      // 天気や気温の影響を最優先する
-      if (weather === "rainy") {
-        displayResult(gender,"rain", "雨の日なので、濡れにくい素材と暗めの色を優先しました。");
-        return;
-      }
-
-      if (temperature <= 10 || weather === "snowy") {
-        displayResult(gender,"warm", "気温が低いため、防寒性を最優先しました。");
-        return;
-      }
 
       // 好み・外見の特徴をスコア化する
       const scores = {
@@ -659,14 +624,6 @@
         scores.casual += 1;
       }
 
-      // 気温による服装の調整
-      if (temperature >= 28) {
-        scores.simple += 2;
-        scores.casual += 1;
-      } else if (temperature <= 17) {
-        scores.clean += 1;
-        scores.mode += 1;
-      }
 
       const bestType = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
 
