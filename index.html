@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI風ファッション提案システム</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
+      background: linear-gradient(135deg, #f4f4f5, #e5e7eb);
+      color: #111827;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .app {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 32px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      color: #d1d5db;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    main {
+      padding: 32px;
+    }
+
+    .section {
+      margin-bottom: 28px;
+      padding: 24px;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      background: #fafafa;
+    }
+
+    .section h2 {
+      font-size: 20px;
+      margin-bottom: 16px;
+      border-left: 6px solid #111827;
+      padding-left: 10px;
+    }
+
+    .question {
+      margin-bottom: 22px;
+    }
+
+    .question label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    select,
+    input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 16px;
+      background: white;
+    }
+
+    .scale {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .scale input {
+      display: none;
+    }
+
+    .scale label {
+      text-align: center;
+      padding: 10px 4px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: normal;
+      transition: 0.2s;
+    }
+
+    .scale input:checked + label {
+      background: #111827;
+      color: white;
+      border-color: #111827;
+      transform: translateY(-2px);
+    }
+
+    .note {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .primary {
+      background: #111827;
+      color: white;
+    }
+
+    .secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    .result {
+      display: none;
+      margin-top: 32px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid #e5e7eb;
+      background: white;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .result-image {
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      background: #e5e7eb;
+    }
+
+    .result-content {
+      padding: 28px;
+    }
+
+    .result-content h2 {
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #111827;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+
+    .items {
+      margin: 16px 0;
+      padding-left: 20px;
+      line-height: 1.9;
+    }
+
+    .reason {
+      background: #f3f4f6;
+      border-radius: 14px;
+      padding: 16px;
+      line-height: 1.8;
+      margin-top: 16px;
+    }
+
+    .shop-link {
+      display: inline-block;
+      margin-top: 18px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      padding: 12px 20px;
+      border-radius: 999px;
+      font-weight: bold;
+    }
+
+    .error {
+      display: none;
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+      padding: 14px;
+      border-radius: 12px;
+      margin-top: 16px;
+      line-height: 1.6;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+      }
+
+      main {
+        padding: 20px;
+      }
+
+      header {
+        padding: 24px;
+      }
+
+      .scale {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .result-image {
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>AI風ファッション提案システム</h1>
+      <p>
+        天気・気温・体格・顔や髪の特徴・好みに関する質問に答えると、<br />
+        条件分岐とスコア計算によりおすすめの服装を1種類提示します。
+      </p>
+    </header>
+
+    <main>
+      <form id="fashionForm">
+        <section class="section">
+          <h2>1. 天気・気温</h2>
+
+          <div class="question">
+            <label for="weather">今日の天気</label>
+            <select id="weather" required>
+              <option value="">選択してください</option>
+              <option value="sunny">晴れ</option>
+              <option value="cloudy">くもり</option>
+              <option value="rainy">雨</option>
+              <option value="snowy">雪</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="temperature">今日の気温</label>
+            <input id="temperature" type="number" placeholder="例：22" required />
+            <p class="note">数字だけ入力してください。例：22</p>
+          </div>
+
+          <div class="question">
+            <label for="scene">行く場所・目的</label>
+            <select id="scene" required>
+              <option value="">選択してください</option>
+              <option value="school">学校</option>
+              <option value="shopping">買い物</option>
+              <option value="date">デート</option>
+              <option value="friend">友達と遊ぶ</option>
+              <option value="formal">少しきれいめな場所</option>
+            </select>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>2. 体格・外見の特徴</h2>
+
+          <div class="question">
+            <label for="height">身長</label>
+            <select id="height" required>
+              <option value="">選択してください</option>
+              <option value="short">低め</option>
+              <option value="middle">普通</option>
+              <option value="tall">高め</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="bodyType">体型</label>
+            <select id="bodyType" required>
+              <option value="">選択してください</option>
+              <option value="slim">細め</option>
+              <option value="normal">標準</option>
+              <option value="strong">がっしり</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label>顔に立体感があると思いますか？</label>
+            <div class="scale" data-name="faceDepth"></div>
+          </div>
+
+          <div class="question">
+            <label>目や眉がはっきりしていると思いますか？</label>
+            <div class="scale" data-name="eyeBrow"></div>
+          </div>
+
+          <div class="question">
+            <label for="skinTone">肌の色</label>
+            <select id="skinTone" required>
+              <option value="">選択してください</option>
+              <option value="bright">明るめ</option>
+              <option value="natural">普通</option>
+              <option value="deep">健康的・暗め</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="hairColor">髪の色</label>
+            <select id="hairColor" required>
+              <option value="">選択してください</option>
+              <option value="black">黒髪</option>
+              <option value="brown">茶髪</option>
+              <option value="bright">明るい髪色</option>
+            </select>
+          </div>
+
+          <div class="question">
+            <label for="hairType">髪質</label>
+            <select id="hairType" required>
+              <option value="">選択してください</option>
+              <option value="straight">直毛</option>
+              <option value="wavy">くせ毛・ウェーブ</option>
+              <option value="volume">ボリュームがある</option>
+            </select>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>3. 好み</h2>
+
+          <div class="question">
+            <label>シンプルな服が好きですか？</label>
+            <div class="scale" data-name="simple"></div>
+          </div>
+
+          <div class="question">
+            <label>ストリート系の服が好きですか？</label>
+            <div class="scale" data-name="street"></div>
+          </div>
+
+          <div class="question">
+            <label>きれいめな服が好きですか？</label>
+            <div class="scale" data-name="clean"></div>
+          </div>
+
+          <div class="question">
+            <label>黒・白・グレーなどの落ち着いた色が好きですか？</label>
+            <div class="scale" data-name="monotone"></div>
+          </div>
+
+          <div class="question">
+            <label>アクセサリーをつけたいですか？</label>
+            <div class="scale" data-name="accessory"></div>
+          </div>
+        </section>
+
+        <div class="buttons">
+          <button type="submit" class="primary">診断する</button>
+          <button type="button" class="secondary" onclick="resetForm()">リセット</button>
+        </div>
+
+        <div id="error" class="error"></div>
+      </form>
+
+      <section id="result" class="result">
+        <img id="resultImage" class="result-image" src="" alt="おすすめ服装の画像" />
+        <div class="result-content">
+          <span id="resultTag" class="tag"></span>
+          <h2 id="resultTitle"></h2>
+          <p id="resultSummary"></p>
+
+          <ul id="resultItems" class="items"></ul>
+
+          <div class="reason">
+            <strong>提案理由</strong>
+            <p id="resultReason"></p>
+          </div>
+
+          <a id="shopLink" class="shop-link" href="#" target="_blank" rel="noopener noreferrer">
+            商品を検索する
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      課題研究用サンプルプログラム / 選択式質疑応答によるファッション提案
+    </footer>
+  </div>
+
+  <script>
+    // 6段階評価ボタンを自動生成する
+    const scaleTexts = [
+      "1\nそう思わない",
+      "2",
+      "3\nどちらでもない",
+      "4",
+      "5\nそう思う"
+    ];
+
+    document.querySelectorAll(".scale").forEach((scaleBox) => {
+      const name = scaleBox.dataset.name;
+
+      for (let i = 1; i <= 5; i++) {
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = name;
+        input.id = `${name}${i}`;
+        input.value = i;
+        input.required = true;
+
+        const label = document.createElement("label");
+        label.htmlFor = `${name}${i}`;
+        label.innerText = scaleTexts[i - 1];
+
+        scaleBox.appendChild(input);
+        scaleBox.appendChild(label);
+      }
+    });
+
+    const outfits = {
+      street: {
+        tag: "ストリート系",
+        title: "オーバーサイズストリートコーデ",
+        summary: "動きやすさと個性を重視した、普段使いしやすい服装です。",
+        items: [
+          "オーバーサイズTシャツまたはパーカー",
+          "ワイドパンツまたはカーゴパンツ",
+          "スニーカー",
+          "キャップまたはシルバーアクセサリー"
+        ],
+        image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80",
+        keyword: "メンズ ストリート オーバーサイズ ワイドパンツ"
+      },
+      clean: {
+        tag: "きれいめ系",
+        title: "シンプルきれいめコーデ",
+        summary: "清潔感を重視し、学校や少しきれいめな場所にも合う服装です。",
+        items: [
+          "白・黒・ネイビーなどの無地トップス",
+          "テーパードパンツまたはスラックス",
+          "革靴風スニーカーまたはローファー",
+          "細めのネックレスや腕時計"
+        ],
+        image: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80",
+        keyword: "メンズ きれいめ シンプル スラックス"
+      },
+      simple: {
+        tag: "シンプル系",
+        title: "モノトーンシンプルコーデ",
+        summary: "黒・白・グレーを中心にまとめた、失敗しにくい服装です。",
+        items: [
+          "白または黒の無地Tシャツ",
+          "黒のパンツ",
+          "白または黒のスニーカー",
+          "必要に応じて軽めのアクセサリー"
+        ],
+        image: "https://images.unsplash.com/photo-1506629905607-d405b7a30db9?auto=format&fit=crop&w=1200&q=80",
+        keyword: "メンズ モノトーン シンプル コーデ"
+      },
+      mode: {
+        tag: "モード系",
+        title: "黒中心のモードコーデ",
+        summary: "黒を中心にして、大人っぽく個性的に見せる服装です。",
+        items: [
+          "黒のシャツまたは黒Tシャツ",
+          "黒のワイドパンツ",
+          "黒スニーカーまたはブーツ",
+          "シルバーアクセサリー"
+        ],
+        image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=80",
+        keyword: "メンズ モード 黒 ワイドパンツ"
+      },
+      casual: {
+        tag: "カジュアル系",
+        title: "やわらかカジュアルコーデ",
+        summary: "親しみやすく、買い物や友達と遊ぶ場面に合う服装です。",
+        items: [
+          "ベージュ・白・淡色のトップス",
+          "デニムパンツまたはチノパン",
+          "スニーカー",
+          "シンプルなバッグ"
+        ],
+        image: "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?auto=format&fit=crop&w=1200&q=80",
+        keyword: "メンズ カジュアル ベージュ デニム"
+      },
+      warm: {
+        tag: "防寒重視",
+        title: "寒い日用あたたかコーデ",
+        summary: "気温が低い日に体温を保ちやすい、実用性を重視した服装です。",
+        items: [
+          "厚手のニットまたはパーカー",
+          "中綿ジャケットまたはコート",
+          "黒・ネイビーなどのロングパンツ",
+          "防寒性のある靴"
+        ],
+        image: "https://images.unsplash.com/photo-1516762689617-e1cffcef479d?auto=format&fit=crop&w=1200&q=80",
+        keyword: "メンズ 冬 コーデ アウター ニット"
+      },
+      rain: {
+        tag: "雨の日向け",
+        title: "雨の日対応コーデ",
+        summary: "雨で濡れにくく、動きやすさも考えた服装です。",
+        items: [
+          "撥水パーカーまたはナイロンジャケット",
+          "濡れても目立ちにくい暗めのパンツ",
+          "防水スニーカー",
+          "コンパクトなバッグ"
+        ],
+        image: "https://images.unsplash.com/photo-1501691223387-dd0500403074?auto=format&fit=crop&w=1200&q=80",
+        keyword: "メンズ 雨の日 コーデ 撥水 ジャケット"
+      }
+    };
+
+    function getRadioValue(name) {
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      return checked ? Number(checked.value) : null;
+    }
+
+    function showError(message) {
+      const error = document.getElementById("error");
+      error.textContent = message;
+      error.style.display = "block";
+    }
+
+    function hideError() {
+      const error = document.getElementById("error");
+      error.textContent = "";
+      error.style.display = "none";
+    }
+
+    document.getElementById("fashionForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      hideError();
+
+      const weather = document.getElementById("weather").value;
+      const temperature = Number(document.getElementById("temperature").value);
+      const scene = document.getElementById("scene").value;
+      const height = document.getElementById("height").value;
+      const bodyType = document.getElementById("bodyType").value;
+      const skinTone = document.getElementById("skinTone").value;
+      const hairColor = document.getElementById("hairColor").value;
+      const hairType = document.getElementById("hairType").value;
+
+      const faceDepth = getRadioValue("faceDepth");
+      const eyeBrow = getRadioValue("eyeBrow");
+      const simple = getRadioValue("simple");
+      const street = getRadioValue("street");
+      const clean = getRadioValue("clean");
+      const monotone = getRadioValue("monotone");
+      const accessory = getRadioValue("accessory");
+
+      if (
+        !weather || !scene || !height || !bodyType || !skinTone || !hairColor || !hairType ||
+        !faceDepth || !eyeBrow || !simple || !street || !clean || !monotone || !accessory ||
+        Number.isNaN(temperature)
+      ) {
+        showError("未回答の項目があります。すべての質問に回答してください。");
+        return;
+      }
+
+      // 天気や気温の影響を最優先する
+      if (weather === "rainy") {
+        displayResult("rain", "雨の日なので、濡れにくい素材と暗めの色を優先しました。");
+        return;
+      }
+
+      if (temperature <= 10 || weather === "snowy") {
+        displayResult("warm", "気温が低いため、防寒性を最優先しました。");
+        return;
+      }
+
+      // 好み・外見の特徴をスコア化する
+      const scores = {
+        street: 0,
+        clean: 0,
+        simple: 0,
+        mode: 0,
+        casual: 0
+      };
+
+      scores.street += street * 2;
+      scores.clean += clean * 2;
+      scores.simple += simple * 2;
+      scores.mode += monotone * 1.5;
+      scores.casual += 5;
+
+      // 顔や目鼻立ちがはっきりしている場合は、黒やモード寄りが似合いやすい設定
+      if (faceDepth >= 4) scores.mode += 3;
+      if (eyeBrow >= 4) scores.mode += 2;
+
+      // アクセサリーを好む場合はストリート・モードに加点
+      if (accessory >= 4) {
+        scores.street += 2;
+        scores.mode += 2;
+      }
+
+      // 場面による補正
+      if (scene === "school") {
+        scores.simple += 3;
+        scores.casual += 2;
+      }
+      if (scene === "shopping" || scene === "friend") {
+        scores.street += 2;
+        scores.casual += 3;
+      }
+      if (scene === "date" || scene === "formal") {
+        scores.clean += 4;
+      }
+
+      // 体格による補正
+      if (height === "tall") {
+        scores.mode += 2;
+        scores.street += 1;
+      }
+      if (height === "short") {
+        scores.simple += 2;
+        scores.clean += 1;
+      }
+      if (bodyType === "strong") {
+        scores.street += 2;
+      }
+      if (bodyType === "slim") {
+        scores.mode += 1;
+        scores.clean += 1;
+      }
+
+      // 色・髪の特徴による補正
+      if (hairColor === "black") {
+        scores.mode += 2;
+        scores.simple += 1;
+      }
+      if (hairColor === "brown" || hairColor === "bright") {
+        scores.casual += 2;
+      }
+      if (skinTone === "bright") {
+        scores.clean += 1;
+        scores.simple += 1;
+      }
+      if (skinTone === "deep") {
+        scores.street += 1;
+        scores.mode += 1;
+      }
+      if (hairType === "volume" || hairType === "wavy") {
+        scores.street += 1;
+        scores.casual += 1;
+      }
+
+      // 気温による服装の調整
+      if (temperature >= 28) {
+        scores.simple += 2;
+        scores.casual += 1;
+      } else if (temperature <= 17) {
+        scores.clean += 1;
+        scores.mode += 1;
+      }
+
+      const bestType = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+
+      let reason = "回答結果をスコア化し、最も点数が高かった系統を選びました。";
+      reason += ` 特に、好みの回答・行く場所・体格・髪や肌の特徴を組み合わせて判定しています。`;
+
+      displayResult(bestType, reason);
+    });
+
+    function displayResult(type, reasonText) {
+      const outfit = outfits[type];
+
+      document.getElementById("resultTag").textContent = outfit.tag;
+      document.getElementById("resultTitle").textContent = outfit.title;
+      document.getElementById("resultSummary").textContent = outfit.summary;
+      document.getElementById("resultImage").src = outfit.image;
+      document.getElementById("resultImage").alt = outfit.title;
+      document.getElementById("resultReason").textContent = reasonText;
+
+      const itemList = document.getElementById("resultItems");
+      itemList.innerHTML = "";
+      outfit.items.forEach((item) => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        itemList.appendChild(li);
+      });
+
+      // ZOZOTOWNの検索ページへ飛ばす。学校発表では「販売サイトリンク」として説明できる。
+      const searchUrl = `https://zozo.jp/search/?p_keyv=${encodeURIComponent(outfit.keyword)}`;
+      const shopLink = document.getElementById("shopLink");
+      shopLink.href = searchUrl;
+      shopLink.textContent = `「${outfit.keyword}」を購入サイトで検索する`;
+
+      const result = document.getElementById("result");
+      result.style.display = "block";
+      result.scrollIntoView({ behavior: "smooth" });
+    }
+
+    function resetForm() {
+      document.getElementById("fashionForm").reset();
+      document.getElementById("result").style.display = "none";
+      hideError();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
+</body>
+</html>
