@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI風ファッション提案システム</title>
+  <title>ファッション提案システム</title>
   <style>
     * {
       box-sizing: border-box;
@@ -258,7 +258,7 @@
 <body>
   <div class="app">
     <header>
-      <h1>AI風ファッション提案システム</h1>
+      <h1>ファッション提案システム</h1>
       <p>
         天気・気温・体格・顔や髪の特徴・好みに関する質問に答えると、<br />
         条件分岐とスコア計算によりおすすめの服装を1種類提示します。
@@ -304,6 +304,12 @@
           <h2>2. 体格・外見の特徴</h2>
 
           <div class="question">
+            <label for="gender">性別</label>
+            <select id="gender" required>
+              <option value="">選択してください</option>
+              <option value="male">男性</option>
+              <option value="female">女性</option>
+            </select>
             <label for="height">身長</label>
             <select id="height" required>
               <option value="">選択してください</option>
@@ -428,7 +434,7 @@
   </div>
 
   <script>
-    // 6段階評価ボタンを自動生成する
+    // 5段階評価ボタンを自動生成する
     const scaleTexts = [
       "1\nそう思わない",
       "2",
