@@ -464,98 +464,65 @@
     });
 
     const outfits = {
-      street: {
-        tag: "ストリート系",
-        title: "オーバーサイズストリートコーデ",
-        summary: "動きやすさと個性を重視した、普段使いしやすい服装です。",
-        items: [
-          "オーバーサイズTシャツまたはパーカー",
-          "ワイドパンツまたはカーゴパンツ",
-          "スニーカー",
-          "キャップまたはシルバーアクセサリー"
-        ],
-        image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=80",
-        keyword: "メンズ ストリート オーバーサイズ ワイドパンツ"
-      },
-      clean: {
-        tag: "きれいめ系",
-        title: "シンプルきれいめコーデ",
-        summary: "清潔感を重視し、学校や少しきれいめな場所にも合う服装です。",
-        items: [
-          "白・黒・ネイビーなどの無地トップス",
-          "テーパードパンツまたはスラックス",
-          "革靴風スニーカーまたはローファー",
-          "細めのネックレスや腕時計"
-        ],
-        image: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80",
-        keyword: "メンズ きれいめ シンプル スラックス"
-      },
-      simple: {
-        tag: "シンプル系",
-        title: "モノトーンシンプルコーデ",
-        summary: "黒・白・グレーを中心にまとめた、失敗しにくい服装です。",
-        items: [
-          "白または黒の無地Tシャツ",
-          "黒のパンツ",
-          "白または黒のスニーカー",
-          "必要に応じて軽めのアクセサリー"
-        ],
-        image: "https://images.unsplash.com/photo-1506629905607-d405b7a30db9?auto=format&fit=crop&w=1200&q=80",
-        keyword: "メンズ モノトーン シンプル コーデ"
-      },
-      mode: {
-        tag: "モード系",
-        title: "黒中心のモードコーデ",
-        summary: "黒を中心にして、大人っぽく個性的に見せる服装です。",
-        items: [
-          "黒のシャツまたは黒Tシャツ",
-          "黒のワイドパンツ",
-          "黒スニーカーまたはブーツ",
-          "シルバーアクセサリー"
-        ],
-        image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=80",
-        keyword: "メンズ モード 黒 ワイドパンツ"
-      },
-      casual: {
-        tag: "カジュアル系",
-        title: "やわらかカジュアルコーデ",
-        summary: "親しみやすく、買い物や友達と遊ぶ場面に合う服装です。",
-        items: [
-          "ベージュ・白・淡色のトップス",
-          "デニムパンツまたはチノパン",
-          "スニーカー",
-          "シンプルなバッグ"
-        ],
-        image: "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?auto=format&fit=crop&w=1200&q=80",
-        keyword: "メンズ カジュアル ベージュ デニム"
-      },
-      warm: {
-        tag: "防寒重視",
-        title: "寒い日用あたたかコーデ",
-        summary: "気温が低い日に体温を保ちやすい、実用性を重視した服装です。",
-        items: [
-          "厚手のニットまたはパーカー",
-          "中綿ジャケットまたはコート",
-          "黒・ネイビーなどのロングパンツ",
-          "防寒性のある靴"
-        ],
-        image: "https://images.unsplash.com/photo-1516762689617-e1cffcef479d?auto=format&fit=crop&w=1200&q=80",
-        keyword: "メンズ 冬 コーデ アウター ニット"
-      },
-      rain: {
-        tag: "雨の日向け",
-        title: "雨の日対応コーデ",
-        summary: "雨で濡れにくく、動きやすさも考えた服装です。",
-        items: [
-          "撥水パーカーまたはナイロンジャケット",
-          "濡れても目立ちにくい暗めのパンツ",
-          "防水スニーカー",
-          "コンパクトなバッグ"
-        ],
-        image: "https://images.unsplash.com/photo-1501691223387-dd0500403074?auto=format&fit=crop&w=1200&q=80",
-        keyword: "メンズ 雨の日 コーデ 撥水 ジャケット"
-      }
-    };
+      male: {
+        street: {
+          tag: "男性向けストリート系",
+          title: "オーバーサイズストリートコーデ",
+          summary: "動きやすさと個性を重視した男性向けの服装です。",
+          items: [
+            "オーバーサイズTシャツまたはパーカー",
+            "ワイドパンツまたはカーゴパンツ",
+            "スニーカー",
+            "キャップまたはシルバーアクセサリー"
+          ],
+          image: "画像URL",
+          keyword: "メンズ ストリート オーバーサイズ ワイドパンツ"
+        },
+        clean: {
+          tag: "男性向けきれいめ系",
+          title: "シンプルきれいめコーデ",
+          summary: "清潔感を重視した男性向けの服装です。",
+          items: [
+            "無地トップス",
+            "スラックス",
+            "革靴風スニーカー",
+            "腕時計"
+          ],
+      image: "画像URL",
+      keyword: "メンズ きれいめ スラックス"
+    }
+  },
+
+  female: {
+    street: {
+      tag: "女性向けストリート系",
+      title: "オーバーサイズストリートコーデ",
+      summary: "ゆるめのシルエットを取り入れた女性向けの服装です。",
+      items: [
+        "オーバーサイズTシャツまたはスウェット",
+        "ワイドパンツまたはカーゴスカート",
+        "厚底スニーカー",
+        "キャップやアクセサリー"
+      ],
+      image: "画像URL",
+      keyword: "レディース ストリート オーバーサイズ コーデ"
+    },
+
+    clean: {
+      tag: "女性向けきれいめ系",
+      title: "シンプルきれいめコーデ",
+      summary: "清潔感と上品さを重視した女性向けの服装です。",
+      items: [
+        "ブラウスまたはきれいめトップス",
+        "スラックスまたはロングスカート",
+        "パンプスまたはきれいめスニーカー",
+        "小さめのアクセサリー"
+      ],
+      image: "画像URL",
+      keyword: "レディース きれいめ シンプル コーデ"
+    }
+  }
+};
 
     function getRadioValue(name) {
       const checked = document.querySelector(`input[name="${name}"]:checked`);
@@ -586,6 +553,7 @@
       const skinTone = document.getElementById("skinTone").value;
       const hairColor = document.getElementById("hairColor").value;
       const hairType = document.getElementById("hairType").value;
+      const gender = document.getElementById("gender").value;
 
       const faceDepth = getRadioValue("faceDepth");
       const eyeBrow = getRadioValue("eyeBrow");
@@ -596,7 +564,7 @@
       const accessory = getRadioValue("accessory");
 
       if (
-        !weather || !scene || !height || !bodyType || !skinTone || !hairColor || !hairType ||
+        !weather || !scene || !gender || !height || !bodyType || !skinTone || !hairColor || !hairType ||
         !faceDepth || !eyeBrow || !simple || !street || !clean || !monotone || !accessory ||
         Number.isNaN(temperature)
       ) {
@@ -606,12 +574,12 @@
 
       // 天気や気温の影響を最優先する
       if (weather === "rainy") {
-        displayResult("rain", "雨の日なので、濡れにくい素材と暗めの色を優先しました。");
+        displayResult(gender,"rain", "雨の日なので、濡れにくい素材と暗めの色を優先しました。");
         return;
       }
 
       if (temperature <= 10 || weather === "snowy") {
-        displayResult("warm", "気温が低いため、防寒性を最優先しました。");
+        displayResult(gender,"warm", "気温が低いため、防寒性を最優先しました。");
         return;
       }
 
@@ -705,11 +673,11 @@
       let reason = "回答結果をスコア化し、最も点数が高かった系統を選びました。";
       reason += ` 特に、好みの回答・行く場所・体格・髪や肌の特徴を組み合わせて判定しています。`;
 
-      displayResult(bestType, reason);
+      displayResult(gender, bestType, reason);
     });
 
-    function displayResult(type, reasonText) {
-      const outfit = outfits[type];
+    function displayResult(gender,type, reasonText) {
+      const outfit = outfits[gender][type];
 
       document.getElementById("resultTag").textContent = outfit.tag;
       document.getElementById("resultTitle").textContent = outfit.title;
