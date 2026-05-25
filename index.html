@@ -231,6 +231,56 @@
       color: #6b7280;
       font-size: 13px;
     }
+    .scale {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .result-image {
+      height: 250px;
+    }
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    .choice-buttons {
+      display: grid;
+      gap: 12px;
+    }
+
+    .choice-button {
+      width: 100%;
+      padding: 16px;
+      border: 2px solid #d1d5db;
+      border-radius: 14px;
+      background: white;
+      color: #111827;
+      text-align: left;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    } 
+
+    .choice-button:hover {
+      border-color: #111827;
+      background: #f3f4f6;
+    }
+
+    .choice-button.selected {
+      background: #111827;
+      color: white;
+      border-color: #111827;
+    }
+
+    .step-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 24px;
+    }
 
     @media (max-width: 640px) {
       body {
@@ -245,56 +295,7 @@
         padding: 24px;
       }
 
-      .scale {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .result-image {
-        height: 250px;
-      }
-      .step {
-        display: none;
-      }
-
-      .step.active {
-        display: block;
-      }
-
-      .choice-buttons {
-        display: grid;
-        gap: 12px;
-      }
-
-      .choice-button {
-        width: 100%;
-        padding: 16px;
-        border: 2px solid #d1d5db;
-        border-radius: 14px;
-        background: white;
-        color: #111827;
-        text-align: left;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-      } 
-
-      .choice-button:hover {
-        border-color: #111827;
-        background: #f3f4f6;
-      }
-
-      .choice-button.selected {
-        background: #111827;
-        color: white;
-        border-color: #111827;
-      }
-
-      .step-buttons {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        margin-top: 24px;
-      }
+      
     }
   </style>
 </head>
