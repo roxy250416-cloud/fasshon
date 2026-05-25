@@ -252,6 +252,49 @@
       .result-image {
         height: 250px;
       }
+      .step {
+        display: none;
+      }
+
+      .step.active {
+        display: block;
+      }
+
+      .choice-buttons {
+        display: grid;
+        gap: 12px;
+      }
+
+      .choice-button {
+        width: 100%;
+        padding: 16px;
+        border: 2px solid #d1d5db;
+        border-radius: 14px;
+        background: white;
+        color: #111827;
+        text-align: left;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+      } 
+
+      .choice-button:hover {
+        border-color: #111827;
+        background: #f3f4f6;
+      }
+
+      .choice-button.selected {
+        background: #111827;
+        color: white;
+        border-color: #111827;
+      }
+
+      .step-buttons {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 24px;
+      }
     }
   </style>
 </head>
@@ -267,29 +310,47 @@
 
     <main>
       <form id="fashionForm">
-        <section class="section">
-          <h2>1. 目的・体格・外見の特徴</h2>
+        <!-- 1. 目的 -->
+        <section class="section step active" id="step1">
+          <h2>1. 行く場所・目的</h2>
+
+          <div class="choice-buttons">
+            <button type="button" class="choice-button" onclick="selectScene('school', this)">○ 学校</button>
+            <button type="button" class="choice-button" onclick="selectScene('shopping', this)">○ 買い物</button>
+            <button type="button" class="choice-button" onclick="selectScene('date', this)">○ デート</button>
+            <button type="button" class="choice-button" onclick="selectScene('friend', this)">○ 友達と遊ぶ</button>
+            <button type="button" class="choice-button" onclick="selectScene('formal', this)">○ きれいめな場所</button>
+          </div>
+
+          <input type="hidden" id="scene" required />
+        </section>
+
+        <!-- 2. 性別 -->
+        <section class="section step" id="step2">
+          <h2>2. 性別</h2>
+
+          <div class="choice-buttons">
+            <button type="button" class="choice-button" onclick="selectGender('male', this)">○ 男性</button>
+            <button type="button" class="choice-button" onclick="selectGender('female', this)">○ 女性</button>
+          </div>
+
+          <input type="hidden" id="gender" required />
+
+          <div class="step-buttons">
+            <button type="button" class="secondary" onclick="prevStep()">戻る</button>
+          </div>
+        </section>
+
+        <!-- 3. 身長・体重・体型 -->
+        <section class="section step" id="step3">
+          <h2>3. 身長・体重・体型</h2>
 
           <div class="question">
-            <label for="scene">行く場所・目的</label>
-            <select id="scene" required>
-              <option value="">選択してください</option>
-              <option value="school">学校</option>
-              <option value="shopping">買い物</option>
-              <option value="date">デート</option>
-              <option value="friend">友達と遊ぶ</option>
-              <option value="formal">きれいめな場所</option>
-            </select>
-            <label for="gender">性別</label>
-            <select id="gender" required>
-              <option value="">選択してください</option>
-              <option value="male">男性</option>
-              <option value="female">女性</option>
-            </select>
             <label for="heightCm">身長</label>
             <input id="heightCm" type="number" placeholder="例：178" required />
-            <p class="note">cm単位で入力してください。例：178</p> 
+            <p class="note">cm単位で入力してください。例：178</p>
           </div>
+
           <div class="question">
             <label for="weightKg">体重</label>
             <input id="weightKg" type="number" placeholder="例：70" />
@@ -305,6 +366,16 @@
               <option value="strong">がっしり</option>
             </select>
           </div>
+
+          <div class="step-buttons">
+            <button type="button" class="secondary" onclick="prevStep()">戻る</button>
+            <button type="button" class="primary" onclick="nextStep()">次へ</button>
+            </div>
+        </section>
+
+        <!-- 4. 顔・髪の特徴 -->
+        <section class="section step" id="step4">
+          <h2>4. 顔・髪の特徴</h2>
 
           <div class="question">
             <label>顔に立体感があると思いますか？</label>
@@ -345,10 +416,16 @@
               <option value="volume">ボリュームがある</option>
             </select>
           </div>
+
+          <div class="step-buttons">
+            <button type="button" class="secondary" onclick="prevStep()">戻る</button>
+            <button type="button" class="primary" onclick="nextStep()">次へ</button>
+          </div>
         </section>
 
-        <section class="section">
-          <h2>3. 好み</h2>
+        <!-- 5. 好み -->
+        <section class="section step" id="step5">
+          <h2>5. 好み</h2>
 
           <div class="question">
             <label>シンプルな服が好きですか？</label>
@@ -374,12 +451,12 @@
             <label>アクセサリーをつけたいですか？</label>
             <div class="scale" data-name="accessory"></div>
           </div>
-        </section>
 
-        <div class="buttons">
-          <button type="submit" class="primary">診断する</button>
-          <button type="button" class="secondary" onclick="resetForm()">リセット</button>
-        </div>
+          <div class="step-buttons">
+            <button type="button" class="secondary" onclick="prevStep()">戻る</button>
+            <button type="submit" class="primary">診断する</button>
+          </div>
+        </section>
 
         <div id="error" class="error"></div>
       </form>
@@ -419,6 +496,61 @@
       "4",
       "5\nそう思う"
     ];
+
+    let currentStep = 1;
+    const maxStep = 5;
+
+    function showStep(stepNumber) {
+      document.querySelectorAll(".step").forEach((step) => {
+        step.classList.remove("active");
+      });
+
+      document.getElementById(`step${stepNumber}`).classList.add("active");
+      currentStep = stepNumber;
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function nextStep() {
+      if (currentStep < maxStep) {
+        showStep(currentStep + 1);
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        showStep(currentStep - 1);
+      }
+    }
+
+
+    function selectScene(value, button) {
+      document.getElementById("scene").value = value;
+
+      document.querySelectorAll("#step1 .choice-button").forEach((btn) => {
+        btn.classList.remove("selected");
+      });
+
+      button.classList.add("selected");
+
+      setTimeout(() => {
+        nextStep();
+      }, 200);
+    }
+
+    function selectGender(value, button) {
+      document.getElementById("gender").value = value;
+
+      document.querySelectorAll("#step2 .choice-button").forEach((btn) => {
+        btn.classList.remove("selected");
+      });
+
+      button.classList.add("selected");
+
+      setTimeout(() => {
+        nextStep();
+      }, 200);
+    }
 
     document.querySelectorAll(".scale").forEach((scaleBox) => {
       const name = scaleBox.dataset.name;
