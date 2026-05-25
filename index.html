@@ -462,7 +462,7 @@
         <div id="error" class="error"></div>
       </form>
 
-      <section id="result" class="result">
+      <section id="step6" class="section step result">
         <img id="resultImage" class="result-image" src="" alt="おすすめ服装の画像" />
         <div class="result-content">
           <span id="resultTag" class="tag"></span>
@@ -479,6 +479,11 @@
           <a id="shopLink" class="shop-link" href="#" target="_blank" rel="noopener noreferrer">
             商品を検索する
           </a>
+          
+          <div class="step-buttons">
+            <button type="button" class="secondary" onclick="prevStep()">戻る</button>
+            <button type="button" class="primary" onclick="resetForm()">最初からやり直す</button>
+          </div>
         </div>
       </section>
     </main>
@@ -499,7 +504,7 @@
     ];
 
     let currentStep = 1;
-    const maxStep = 5;
+    const maxStep = 6;
 
     function showStep(stepNumber) {
       document.querySelectorAll(".step").forEach((step) => {
@@ -843,10 +848,8 @@
       const shopLink = document.getElementById("shopLink");
       shopLink.href = searchUrl;
       shopLink.textContent = `「${outfit.keyword}」を購入サイトで検索する`;
-
-      const result = document.getElementById("result");
-      result.style.display = "block";
-      result.scrollIntoView({ behavior: "smooth" });
+    
+      showStep(6);
     }
 
     function resetForm() {
