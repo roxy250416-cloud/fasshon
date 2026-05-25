@@ -522,7 +522,6 @@
       event.preventDefault();
       hideError();
 
-      const temperature = Number(document.getElementById("temperature").value);
       const scene = document.getElementById("scene").value;
       const bodyType = document.getElementById("bodyType").value;
       const skinTone = document.getElementById("skinTone").value;
@@ -591,9 +590,8 @@
       if (
         !scene || !gender || Number.isNaN(heightCm) || heightCm <= 0 || !bodyType || !skinTone || !hairColor || !hairType ||
         !faceDepth || !eyeBrow || !simple || !street || !clean || !monotone || !accessory ||
-        Number.isNaN(temperature)
       ) {
-        showError("未回答の項目があります。すべての質問に回答してください。");
+        showError("未回答の項目があります。質問に回答してください。");
         return;
       }
 
@@ -637,12 +635,18 @@
       }
 
       // 体格による補正
-      if (height === "tall") {
-        scores.mode += 2;
+      if (size === "L") {
         scores.street += 1;
+        scores.mode += 1;
       }
-      if (height === "short") {
-        scores.simple += 2;
+
+      if (size === "LL") {
+        scores.street += 2;
+        scores.mode += 2;
+      }
+
+      if (size === "S") {
+        scores.simple += 1;
         scores.clean += 1;
       }
       if (bodyType === "strong") {
