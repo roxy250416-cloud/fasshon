@@ -479,7 +479,7 @@
           <a id="shopLink" class="shop-link" href="#" target="_blank" rel="noopener noreferrer">
             商品を検索する
           </a>
-          
+
           <div class="step-buttons">
             <button type="button" class="secondary" onclick="prevStep()">戻る</button>
             <button type="button" class="primary" onclick="resetForm()">最初からやり直す</button>
@@ -854,9 +854,13 @@
 
     function resetForm() {
       document.getElementById("fashionForm").reset();
-      document.getElementById("result").style.display = "none";
       hideError();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      document.querySelectorAll(".choice-button").forEach((btn) => {
+        btn.classList.remove("selected");
+      });
+
+      showStep(1);
     }
   </script>
 </body>
