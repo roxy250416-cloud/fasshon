@@ -238,12 +238,28 @@
     .result-image {
       height: 250px;
     }
+
     .step {
       display: none;
+      opacity: 0;
+      transform: translateY(12px);
     }
 
     .step.active {
       display: block;
+      animation: fadeInStep 0.35s ease forwards;
+    }
+
+    @keyframes fadeInStep {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .choice-buttons {
