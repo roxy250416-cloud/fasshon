@@ -274,6 +274,74 @@
       color: white;
       border-color: #111827;
     }
+    .circle-choice-area {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      justify-items: center;
+      align-items: center;
+      margin-top: 24px;
+    }
+
+    .circle-button {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 3px solid #8b4513;
+      background: #f4b183;
+      color: #3b1f0f;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(139, 69, 19, 0.2);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .circle-button:hover {
+      background: #f7c59f;
+      transform: translateY(-6px);
+      box-shadow: 0 16px 28px rgba(139, 69, 19, 0.28);
+    }
+
+    .circle-button:active {
+      transform: scale(0.92);
+      box-shadow: 0 4px 10px rgba(139, 69, 19, 0.25);
+    }
+
+    .circle-button.selected {
+      background: #e07a3f;
+      color: white;
+      transform: scale(1.08);
+    }
+
+    .circle-button.pop {
+      animation: popTouch 0.35s ease;
+    }
+
+    @keyframes popTouch {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.12);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .circle-choice-area {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .circle-button {
+        width: 135px;
+        height: 135px;
+        font-size: 16px;
+      }
+    }
 
     .step-buttons {
       display: flex;
@@ -315,12 +383,12 @@
         <section class="section step active" id="step1">
           <h2>1. 行く場所・目的</h2>
 
-          <div class="choice-buttons">
-            <button type="button" class="choice-button" onclick="selectScene('school', this)">○ 学校</button>
-            <button type="button" class="choice-button" onclick="selectScene('shopping', this)">○ 買い物</button>
-            <button type="button" class="choice-button" onclick="selectScene('date', this)">○ デート</button>
-            <button type="button" class="choice-button" onclick="selectScene('friend', this)">○ 友達と遊ぶ</button>
-            <button type="button" class="choice-button" onclick="selectScene('formal', this)">○ きれいめな場所</button>
+          <div class="circle-choice-area">
+            <button type="button" class="circle-button" onclick="selectScene('school', this)">学校</button>
+            <button type="button" class="circle-button" onclick="selectScene('shopping', this)">買い物</button>
+            <button type="button" class="circle-button" onclick="selectScene('date', this)">デート</button>
+          <button type="button" class="circle-button" onclick="selectScene('friend', this)">友達と遊ぶ</button>
+          <button type="button" class="circle-button" onclick="selectScene('formal', this)">きれいめな場所</button>
           </div>
 
           <input type="hidden" id="scene" required />
@@ -507,10 +575,21 @@
     const maxStep = 6;
 
     function showStep(stepNumber) {
-      document.querySelectorAll(".step").forEach((step) => {
-        step.classList.remove("active");
-      });
+      function selectScene(value, button) {
+        document.getElementById("scene").value = value;
 
+        document.querySelectorAll("#step1 .circle-button").forEach((btn) => {
+          btn.classList.remove("selected");
+          btn.classList.remove("pop");
+        });
+
+        button.classList.add("selected");
+        button.classList.add("pop");
+
+        setTimeout(() => {
+          nextStep();
+        }, 350);
+      }
       document.getElementById(`step${stepNumber}`).classList.add("active");
       currentStep = stepNumber;
 
