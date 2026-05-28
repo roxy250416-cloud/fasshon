@@ -619,9 +619,78 @@
     }
 
     function nextStep() {
+      if (!validateCurrentStep()) {
+        return;
+      }
+
       if (currentStep < maxStep) {
+        hideError();
         showStep(currentStep + 1);
       }
+    }
+
+    function validateCurrentStep() {
+      hideError();
+
+      if (currentStep === 1) {
+        const scene = document.getElementById("scene").value;
+
+        if (!scene) {
+          showError("行く場所・目的を選択してください。");
+          return false;
+        }
+      }
+
+      if (currentStep === 2) {
+        const gender = document.getElementById("gender").value;
+
+        if (!gender) {
+          showError("性別を選択してください。");
+          return false;
+        }
+      }
+
+      if (currentStep === 3) {
+        const heightCm = Number(document.getElementById("heightCm").value);
+        const bodyType = document.getElementById("bodyType").value;
+
+        if (Number.isNaN(heightCm) || heightCm <= 0) {
+          showError("身長を入力してください。");
+          return false;
+        }
+        if (!bodyType) {
+          showError("体型を選択してください。");
+          return false;
+        }
+      }
+
+      if (currentStep === 4) {
+        const faceDepth = getRadioValue("faceDepth");
+        const eyeBrow = getRadioValue("eyeBrow");
+        const skinTone = document.getElementById("skinTone").value;
+        const hairColor = document.getElementById("hairColor").value;
+        const hairType = document.getElementById("hairType").value;
+
+        if (!faceDepth || !eyeBrow || !skinTone || !hairColor || !hairType) {
+          showError("顔・髪の特徴をすべて回答してください。");
+          return false;
+        }
+      }
+
+      if (currentStep === 5) {
+        const simple = getRadioValue("simple");
+        const street = getRadioValue("street");
+        const clean = getRadioValue("clean");
+        const monotone = getRadioValue("monotone");
+        const accessory = getRadioValue("accessory");
+
+        if (!simple || !street || !clean || !monotone || !accessory) {
+          showError("好みの質問をすべて回答してください。");
+          return false;
+        }
+      }
+
+      return true;
     }
 
     function prevStep() {
