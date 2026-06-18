@@ -449,13 +449,13 @@
 
           <div class="question">
             <label for="heightCm">身長</label>
-            <input id="heightCm" type="number" placeholder="例：178" required />
+            <input id="heightCm" type="number" min="1" step="1" placeholder="例：178" required />
             <p class="note">cm単位で入力してください。例：178</p>
           </div>
 
           <div class="question">
             <label for="weightKg">体重</label>
-            <input id="weightKg" type="number" placeholder="例：70" />
+            <input id="weightKg" type="number" min="1" step="1" placeholder="例：70" />
             <p class="note">任意入力です。kg単位で入力してください。</p>
           </div>
 
@@ -652,12 +652,20 @@
 
       if (currentStep === 3) {
         const heightCm = Number(document.getElementById("heightCm").value);
+        const weightValue = document.getElementById("weightKg").value;
+        const weightKg = Number(weightValue);
         const bodyType = document.getElementById("bodyType").value;
 
-        if (Number.isNaN(heightCm) || heightCm <= 0) {
-          showError("身長を入力してください。");
+        if (!Number.isInteger(heightCm) || heightCm <= 0) {
+          showError("身長は自然数で入力してください。例：178");
           return false;
         }
+      // 体重は任意。入力されている場合だけ自然数チェックする
+        if (weightValue !== "" && (!Number.isInteger(weightKg) || weightKg <= 0)) {
+          showError("体重は自然数で入力してください。例：70");
+          return false;
+        }
+
         if (!bodyType) {
           showError("体型を選択してください。");
           return false;
@@ -1048,6 +1056,38 @@
       if (event.key === "Enter") {
         event.preventDefault();
         document.getElementById("bodyType").focus();
+      }
+    });
+
+    let bodyTypeEnterReady = false;
+
+    document.getElementById("bodyType").addEventListener("change", function () {
+      bodyTypeEnterReady = false;
+    });
+
+    document.getElementById("bodyType").addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+
+        const bodyType = document.getElementById("bodyType").value;
+
+        if (!bodyType) {
+          showError("体型を選択してください。");
+          return;
+        }
+
+      // 1回目のEnter：選択を決定した扱い
+        if (!bodyTypeEnterReady) {
+          hideError();
+          bodyTypeEnterReady = true;
+          showError("もう一度Enterを押すと次へ進みます。");
+          return;
+        }
+
+        // 2回目のEnter：次へ進む
+        hideError();
+        bodyTypeEnterReady = false;
+        nextStep();
       }
     });
     //python3 -m http.server 8000
